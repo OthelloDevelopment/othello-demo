@@ -31,6 +31,8 @@ static void othello_class_init(OthelloClass *klass);
 static void othello_init(Othello *othello);
 
 static void othello_toggle(GtkWidget *widget, Othello *othello);
+static void send_toggle(GtkWidget *widget, Othello *othello);
+static void recv_toggle(GtkWidget *widget, Othello *othello);
 
 static gint othello_signals[LAST_SIGNAL] = {0}; // save the signal
 //取得控件类型
@@ -75,7 +77,7 @@ static void othello_init(Othello *othello) {
     col.blue = 0;
     col.green = 0;
     //创建格状容器
-    table = gtk_table_new(8, 8, TRUE);
+    table = gtk_table_new(8, 9, TRUE);
     gtk_container_add(GTK_CONTAINER(othello), table);
     gtk_widget_show(table);
 //创建状态按钮并添加到格状容器中
@@ -83,9 +85,9 @@ static void othello_init(Othello *othello) {
         for (j = 0; j < 8; j++) {
             othello->buttons[i][j] = gtk_toggle_button_new();
             gtk_widget_modify_bg(
-                            GTK_WIDGET(othello->buttons[i][j]),
-                            GTK_STATE_NORMAL, &col
-                            );
+                    GTK_WIDGET(othello->buttons[i][j]),
+                    GTK_STATE_NORMAL, &col
+            );
             gtk_table_attach_defaults(
                     GTK_TABLE(table),
                     othello->buttons[i][j],
@@ -101,7 +103,52 @@ static void othello_init(Othello *othello) {
             gtk_widget_set_size_request(othello->buttons[i][j], 44, 44);
         }//设置尺寸
     }
+
+    othello->sendbutton = gtk_toggle_button_new();
+    gtk_widget_modify_bg(
+            GTK_WIDGET(othello->sendbutton),
+            GTK_STATE_NORMAL, &col
+    );
+    gtk_table_attach_defaults(
+            GTK_TABLE(table),
+            othello->sendbutton,
+            8, 8 + 1, 0, 0 + 1
+    );//放按钮
+    g_signal_connect(
+            G_OBJECT(othello->sendbutton),
+            "toggled",
+            G_CALLBACK(send_toggle),
+            othello
+    );//加回调函数
+
+    othello->recvbutton = gtk_toggle_button_new();
+    gtk_widget_modify_bg(
+            GTK_WIDGET(othello->recvbutton),
+            GTK_STATE_NORMAL, &col
+    );
+    gtk_table_attach_defaults(
+            GTK_TABLE(table),
+            othello->recvbutton,
+            8, 8 + 1, 1, 1 + 1
+    );//放按钮
+    g_signal_connect(
+            G_OBJECT(othello->recvbutton),
+            "toggled",
+            G_CALLBACK(recv_toggle),
+            othello
+    );//加回调函数
+
     gtk_widget_show_all(othello);
+}
+
+
+static void send_toggle(GtkWidget *widget, Othello *othello) {
+    printf("send\n");
+}
+
+
+static void recv_toggle(GtkWidget *widget, Othello *othello) {
+    printf("recv\n");
 }
 
 //创建八皇后控件的函数

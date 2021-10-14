@@ -18,6 +18,8 @@ struct _Othello {
     GtkVBox vbox;
     GtkWidget *msg;
     GtkWidget *buttons[8][8];//定义8x8按钮数组来表示棋盘
+    GtkWidget *sendbutton;
+    GtkWidget *recvbutton;
 };
 
 struct _OthelloClass {
