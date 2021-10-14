@@ -256,11 +256,12 @@ void rendermap(Othello *othello) {
     int i, j;
     for(i=0;i<8;i++) {
         for(j=0;j<8;j++) {
-            setbutton(area[i][j], i, j, othello);
+            if(area[i][j] == 0 || area[i][j] == 1) {
+                setbutton(area[i][j], i, j, othello);
+            }
         }
     }
 }
-
 
 //当表示棋盘格的状态按钮的状态改变时执行
 static void othello_toggle(GtkWidget *widget, Othello *othello) {
