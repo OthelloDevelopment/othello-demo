@@ -151,11 +151,28 @@ static void othello_init(Othello *othello) {
 
 static void send_toggle(GtkWidget *widget, Othello *othello) {
     printf("send\n");
+    encodefunc();
+    extern int sockfd;
+    send(sockfd,sendmsg,sizeof(sendmsg),0); //发送消息
+    
 }
 
 
 static void recv_toggle(GtkWidget *widget, Othello *othello) {
     printf("recv\n");
+    extern int sockfd;
+    recv(sockfd,recvmsg2,256,0);
+    decodefunc();
+    int i,j;
+    for(i=0;i<8;i++) {
+        for(j=0;j<8;j++) {
+            printf("%d ", area[i][j]);
+        }
+        printf("\n");
+    }
+    printf("%s\n",recvmsg2);
+    rendermap(othello);
+    
 }
 
 //创建八皇后控件的函数
@@ -208,12 +225,13 @@ void encodefunc() {
     for(i=0;i<8;i++) {
         for(j=0;j<8;j++) {
             switch(area[i][j]) {
-                case 0: sendmsg[i * 8 + j] = "0"; break;
-                case 1: sendmsg[i * 8 + j] = "1"; break;
-                case 2: sendmsg[i * 8 + j] = "2"; break;
+                case 0: sendmsg[i * 8 + j] = '0'; break;
+                case 1: sendmsg[i * 8 + j] = '1'; break;
+                case 2: sendmsg[i * 8 + j] = '2'; break;
             }
         }
     }
+    sendmsg[64]='\0';
 }
 
 
@@ -221,13 +239,13 @@ void decodefunc() {
     int i, j;
     for(i=0;i<8;i++) {
         for(j=0;j<8;j++) {
-            if(recvmsg2[i * 8 + j] == "0") {
+            if(recvmsg2[i * 8 + j] == '0') {
                 area[i][j] = 0;
             }
-            else if(recvmsg2[i * 8 + j] == "1") {
+            else if(recvmsg2[i * 8 + j] == '1') {
                 area[i][j] = 1;
             }
-            else if(recvmsg2[i * 8 + j] == "2") {
+            else if(recvmsg2[i * 8 + j] == '2') {
                 area[i][j] = 2;
             }
         }
@@ -247,7 +265,6 @@ void rendermap(Othello *othello) {
 //当表示棋盘格的状态按钮的状态改变时执行
 static void othello_toggle(GtkWidget *widget, Othello *othello) {
     int i, j; 
-    extern int sockfd;
     gboolean istrue = TRUE;
     GtkWidget *image;
     GtkWidget *child;
@@ -260,7 +277,7 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
 //        image = gtk_image_new_from_file("white.png"); // create the white image
 //    }
 
-    iref = g_object_ref(image);//引用图像控件指针
+    // iref = g_object_ref(image);//引用图像控件指针
     //查找按钮
     for (i = 0; i < 8; i++) {
         for (j = 0; j < 8; j++) {
@@ -369,20 +386,19 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
 
     // printf("请输入要发送的数据:");
     // scanf("%s",sendmsg);
-    encodefunc();
+    // encodefunc();
     // printf("please input:");
-    // scanf("%s", &sendmsg);
-    send(sockfd,sendmsg,sizeof(sendmsg),0); //发送消息
-    if(recv(sockfd,recvmsg2,256,0)>0)//接收新消息
-    {
-	    // recvmsg2[sizeof(recvmsg2)+1]='\0';
-        decodefunc();
-        printf("收到服务器消息:\n%s\n",recvmsg2);//输出到终端	
-    }
+    
+    // if(recv(sockfd,recvmsg2,256,0)>0)//接收新消息
+    // {
+	//     recvmsg2[sizeof(recvmsg2)+1]='\0';
+    //     decodefunc();
+    //     // printf("收到服务器消息:\n%s\n",recvmsg2);//输出到终端	
+    // }
 
-    rendermap(othello);
+    // rendermap(othello);
 
-    // if this is client
+    // // if this is client
     // send map
     // receive refreshed map
     // find difference

@@ -143,14 +143,27 @@ static void othello_init(Othello *othello) {
 
 
 static void send_toggle(GtkWidget *widget, Othello *othello) {
-    // extern int c_fd;
-    // send(c_fd,sendmsg,sizeof(sendmsg),0); //发送消息
+    printf("send\n");
+    encodefunc();
+    extern int c_fd;
+    send(c_fd,sendmsg,sizeof(sendmsg),0); //发送消息
 }
 
 
 static void recv_toggle(GtkWidget *widget, Othello *othello) {
-    // extern int c_fd;
-    // recv(c_fd,recvmsg1,256,0);
+    printf("recv\n");
+    extern int c_fd;
+    recv(c_fd,recvmsg1,256,0);
+    decodefunc();
+    int i,j;
+    for(i=0;i<8;i++) {
+        for(j=0;j<8;j++) {
+            printf("%d ", area[i][j]);
+        }
+        printf("\n");
+    }
+    printf("%s\n",recvmsg1);
+    rendermap(othello);
     
 }
 
@@ -199,17 +212,18 @@ void setbutton(int turn, int x, int y, Othello *othello) {
 }
 
 
-char *encodefunc() {
+void encodefunc() {
     int i, j;
     for(i=0;i<8;i++) {
         for(j=0;j<8;j++) {
             switch(area[i][j]) {
-                case 0: sendmsg[i * 8 + j] = "0"; break;
-                case 1: sendmsg[i * 8 + j] = "1"; break;
-                case 2: sendmsg[i * 8 + j] = "2"; break;
+                case 0: sendmsg[i * 8 + j] = '0'; break;
+                case 1: sendmsg[i * 8 + j] = '1'; break;
+                case 2: sendmsg[i * 8 + j] = '2'; break;
             }
         }
     }
+    sendmsg[64]='\0';
 }
 
 
@@ -217,13 +231,13 @@ void decodefunc() {
     int i, j;
     for(i=0;i<8;i++) {
         for(j=0;j<8;j++) {
-            if(recvmsg1[i * 8 + j] == "0") {
+            if(recvmsg1[i * 8 + j] == '0') {
                 area[i][j] = 0;
             }
-            else if(recvmsg1[i * 8 + j] == "1") {
+            else if(recvmsg1[i * 8 + j] == '1') {
                 area[i][j] = 1;
             }
-            else if(recvmsg1[i * 8 + j] == "2") {
+            else if(recvmsg1[i * 8 + j] == '2') {
                 area[i][j] = 2;
             }
         }
@@ -256,7 +270,7 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
 //        image = gtk_image_new_from_file("white.png"); // create the white image
 //    }
 
-    iref = g_object_ref(image);//引用图像控件指针
+    // iref = g_object_ref(image);//引用图像控件指针
     //查找按钮
     for (i = 0; i < 8; i++) {
         for (j = 0; j < 8; j++) {
@@ -350,18 +364,13 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
                     }
                 }
 //                printf("right\n");
-                turn ^= 1;
+                // turn ^= 1;
             }
         }
     }
     rendermap(othello);
 
-    // for(i=0;i<8;i++) {
-    //     for(j=0;j<8;j++) {
-    //         printf("%d ", area[i][j]);
-    //     }
-    //     printf("\n");
-    // }
+    
     // encodefunc();
     // // printf("please input:");
     // // scanf("%s", &sendmsg);
