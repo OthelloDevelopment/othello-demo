@@ -201,31 +201,31 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
     GtkWidget *child;
     gpointer iref;
     GtkWidget *dialog;
-    if(turn == 1) {
-        image = gtk_image_new_from_file("black.png"); // create the black image
-    }
-    else {
-        image = gtk_image_new_from_file("white.png"); // create the white image
-    }
+//    if(turn == 1) {
+//        image = gtk_image_new_from_file("black.png"); // create the black image
+//    }
+//    else {
+//        image = gtk_image_new_from_file("white.png"); // create the white image
+//    }
 
     iref = g_object_ref(image);//引用图像控件指针
     //查找按钮
     for (i = 0; i < 8; i++) {
         for (j = 0; j < 8; j++) {
-            if (GTK_TOGGLE_BUTTON(othello->buttons[i][j])->active == TRUE && area[i][j] == -1) {
-                printf("i:%d j:%d area:%d\n", i, j, area[i][j]);
-                setbutton(turn, i, j, othello);
+            if (GTK_TOGGLE_BUTTON(othello->buttons[i][j])->active == TRUE && area[i][j] == 2) {
+//                printf("i:%d j:%d area:%d\n", i, j, area[i][j]);
+//                setbutton(turn, i, j, othello);
                 area[i][j] = turn;
-                all++;
-                printf("push button x(i):%d y(j):%d\n", i, j);
+//                all++;
+//                printf("push button x(i):%d y(j):%d\n", i, j);
 
                 // up direction
                 nx = i;
                 ny = j;
-                if(nx - 1 >=0 && area[nx - 1][ny] != turn && area[nx - 1][ny] != -1) {
+                if(nx - 1 >=0 && area[nx - 1][ny] != turn && area[nx - 1][ny] != 2) {
                     for(;;) {
                         nx--;
-                        if(nx >= 0 && area[nx][ny] == -1) {
+                        if(nx >= 0 && area[nx][ny] == 2) {
                             break;
                         }
                         if(nx < 0 || area[nx][ny] == turn) {
@@ -243,10 +243,10 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
                 // down direction
                 nx = i;
                 ny = j;
-                if(nx + 1 <= 7 && area[nx + 1][ny] != turn && area[nx + 1][ny] != -1) {
+                if(nx + 1 <= 7 && area[nx + 1][ny] != turn && area[nx + 1][ny] != 2) {
                     for(;;) {
                         nx++;
-                        if(nx<=7 && area[nx][ny] == -1) {
+                        if(nx<=7 && area[nx][ny] == 2) {
                             break;
                         }
                         if(nx > 7 || area[nx][ny] == turn) {
@@ -264,10 +264,10 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
                 // left direction
                 nx = i;
                 ny = j;
-                if(ny - 1 >= 0 && area[nx][ny - 1] != turn && area[nx][ny - 1] != -1) {
+                if(ny - 1 >= 0 && area[nx][ny - 1] != turn && area[nx][ny - 1] != 2) {
                     for(;;) {
                         ny--;
-                        if(ny >= 0 && area[nx][ny] == -1) {
+                        if(ny >= 0 && area[nx][ny] == 2) {
                             break;
                         }
                         if(ny < 0 || area[nx][ny] == turn) {
@@ -285,10 +285,10 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
                 // right direction
                 nx = i;
                 ny = j;
-                if(ny + 1 <= 7 && area[nx][ny + 1] != turn && area[nx][ny + 1] != -1) {
+                if(ny + 1 <= 7 && area[nx][ny + 1] != turn && area[nx][ny + 1] != 2) {
                     for(;;) {
                         ny++;
-                        if(ny <=7 && area[nx][ny] == -1) {
+                        if(ny <=7 && area[nx][ny] == 2) {
                             break;
                         }
                         if(ny > 7 || area[nx][ny] == turn) {
@@ -302,7 +302,7 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
                     }
                 }
 //                printf("right\n");
-                turn ^= 1;
+//                turn ^= 1;
             }
         }
     }
