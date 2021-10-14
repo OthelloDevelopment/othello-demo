@@ -19,8 +19,8 @@ static int area[8][8] = {{2, 2, 2, 2, 2, 2, 2, 2},
 static int all = 0; // the sum of chess
 static int turn = 0; // 1 is black, 0 is white
 int nx, ny; // record x, y
-// int recvmsg1[8][8];
-extern char recvmsg1[256];
+
+char recvmsg1[256];
 char sendmsg[256];
 static void dialog_show(Othello *othello); // show the status and clear the board
 
@@ -143,12 +143,15 @@ static void othello_init(Othello *othello) {
 
 
 static void send_toggle(GtkWidget *widget, Othello *othello) {
-    printf("send\n");
+    // extern int c_fd;
+    // send(c_fd,sendmsg,sizeof(sendmsg),0); //发送消息
 }
 
 
 static void recv_toggle(GtkWidget *widget, Othello *othello) {
-    printf("recv\n");
+    // extern int c_fd;
+    // recv(c_fd,recvmsg1,256,0);
+    
 }
 
 //创建八皇后控件的函数
@@ -241,7 +244,6 @@ void rendermap(Othello *othello) {
 //当表示棋盘格的状态按钮的状态改变时执行
 static void othello_toggle(GtkWidget *widget, Othello *othello) {
     int i, j;
-    extern int c_fd;
     gboolean istrue = TRUE;
     GtkWidget *image;
     GtkWidget *child;
@@ -360,20 +362,20 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
     //     }
     //     printf("\n");
     // }
-    encodefunc();
-    // printf("please input:");
-    // scanf("%s", &sendmsg);
-    send(c_fd,sendmsg, sizeof(sendmsg),0);//回复消息
+    // encodefunc();
+    // // printf("please input:");
+    // // scanf("%s", &sendmsg);
+    // send(c_fd,sendmsg, sizeof(sendmsg),0);//回复消息
     
     
-    if(recv(c_fd,recvmsg1,256,0)>0) //接收消息recv(c_fd,buf,256,0)>0
-	{
-        // recvmsg1[sizeof(recvmsg1)+1]='\0';
-        decodefunc();
-        printf("收到客户端消息:\n %s\n",recvmsg1);//输出到终端
+    // if(recv(c_fd,recvmsg1,256,0)>0) //接收消息recv(c_fd,buf,256,0)>0
+	// {
+    //     recvmsg1[sizeof(recvmsg1)+1]='\0';
+    //     decodefunc();
+    //     // printf("收到客户端消息:\n %s\n",recvmsg1);//输出到终端
       
-    }
-    rendermap(othello);
+    // }
+    // rendermap(othello);
     // if this is client
     // send map
     // receive refreshed map
