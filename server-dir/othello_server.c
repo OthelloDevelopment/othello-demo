@@ -22,7 +22,7 @@ static int area[8][8] = {{2, 2, 2, 2, 2, 2, 2, 2},
 static int all = 0;
 
 // 1 is black, 0 is white
-static int turn = 1;
+static int turn = 0;
 
 // record x, y
 int nx, ny;
