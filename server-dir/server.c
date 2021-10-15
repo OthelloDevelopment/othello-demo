@@ -1,4 +1,3 @@
-/* 八皇后问题测试程序 othello_test.c*/
 #include <stdlib.h>
 #include <gtk/gtk.h>
 #include "othello_server.h"
@@ -14,7 +13,6 @@
 
 // char recvmsg1[256];
 int c_fd;
-//八皇后控件的“Othello”信号的回调函数
 static void win(GtkWidget *othello, gpointer data) {
     othello_clear(OTHELLO(othello));//清除棋盘中的皇后
 }

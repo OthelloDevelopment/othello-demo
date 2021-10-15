@@ -1,4 +1,3 @@
-/* 八皇后问题测试程序 othello_test.c*/
 #include <stdlib.h>
 #include <gtk/gtk.h>
 #include "othello_client.h"
@@ -12,7 +11,6 @@
 
 int sockfd;	 // 客户套接字标识符
 
-//八皇后控件的“Othello”信号的回调函数
 static void win(GtkWidget *othello, gpointer data) {
     othello_clear(OTHELLO(othello));//清除棋盘中的皇后
 }
