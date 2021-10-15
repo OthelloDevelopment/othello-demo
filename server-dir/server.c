@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
     othello = othello_new();
     gtk_box_pack_start(GTK_BOX(vbox), othello, FALSE, FALSE, 3);
 
-    //向自定义控件连接信号"Othello"
+    // send signal to connect the widget
     g_signal_connect(G_OBJECT(othello), "Othello", G_CALLBACK(win), NULL);
 
     statusbar = gtk_statusbar_new();

@@ -32,7 +32,6 @@ int main(int argc, char *argv[]) {
         perror("连接失败");
         return 1;
     }
-    
 
     GtkWidget *window, *vbox, *hbox;
     GtkWidget *label, *image, *statusbar;
@@ -59,7 +58,7 @@ int main(int argc, char *argv[]) {
     othello = othello_new();
     gtk_box_pack_start(GTK_BOX(vbox), othello, FALSE, FALSE, 3);
 
-    //向自定义控件连接信号"Othello"
+    // send signal to connect widget
     g_signal_connect(G_OBJECT(othello), "Othello", G_CALLBACK(win), NULL);
 
     statusbar = gtk_statusbar_new();
@@ -67,6 +66,6 @@ int main(int argc, char *argv[]) {
     gtk_statusbar_push(statusbar, 1, "");
     gtk_widget_show_all(window);
     gtk_main();
-    close(sockfd);				// 关闭连接
+    close(sockfd);
     return 0;
 }
