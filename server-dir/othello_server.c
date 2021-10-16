@@ -116,26 +116,26 @@ static void othello_init(Othello *othello) {
     }
 
     // add send button and set the label
-    othello->sendbutton = gtk_toggle_button_new();
-    gtk_button_set_label(othello->sendbutton, "send");
-
-    gtk_widget_modify_bg(
-            GTK_WIDGET(othello->sendbutton),
-            GTK_STATE_NORMAL, &col
-    );
-    // set the button
-    gtk_table_attach_defaults(
-            GTK_TABLE(table),
-            othello->sendbutton,
-            8, 8 + 1, 0, 0 + 1
-    );
-    // add the hook function
-    g_signal_connect(
-            G_OBJECT(othello->sendbutton),
-            "toggled",
-            G_CALLBACK(send_toggle),
-            othello
-    );
+//    othello->sendbutton = gtk_toggle_button_new();
+//    gtk_button_set_label(othello->sendbutton, "send");
+//
+//    gtk_widget_modify_bg(
+//            GTK_WIDGET(othello->sendbutton),
+//            GTK_STATE_NORMAL, &col
+//    );
+//    // set the button
+//    gtk_table_attach_defaults(
+//            GTK_TABLE(table),
+//            othello->sendbutton,
+//            8, 8 + 1, 0, 0 + 1
+//    );
+//    // add the hook function
+//    g_signal_connect(
+//            G_OBJECT(othello->sendbutton),
+//            "toggled",
+//            G_CALLBACK(send_toggle),
+//            othello
+//    );
 
     othello->recvbutton = gtk_toggle_button_new();
     gtk_button_set_label(othello->recvbutton, "recv");
@@ -293,98 +293,106 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
     // find which button is pushed
     for (i = 0; i < 8; i++) {
         for (j = 0; j < 8; j++) {
-            if (GTK_TOGGLE_BUTTON(othello->buttons[i][j])->active == TRUE && area[i][j] == 2) {
+            if(GTK_TOGGLE_BUTTON(othello->buttons[i][j])->active == TRUE) {
                 gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(othello->buttons[i][j]), FALSE);
-                isreverse = 0;
-                //area[i][j] = turn;
-                all++;
+                if (area[i][j] == 2) {
 
-                // up direction
-                nx = i;
-                ny = j;
-                if(nx - 1 >=0 && area[nx - 1][ny] != turn && area[nx - 1][ny] != 2) {
-                    for(;;) {
-                        nx--;
-                        if(nx >= 0 && area[nx][ny] == 2) {
-                            break;
-                        }
-                        if(area[nx][ny] == turn) {
-                            isreverse = 1;
-                            int k;
-                            for(k=i; k>nx; k--) {
-                                area[k][ny] = turn;
+                    isreverse = 0;
+                    //area[i][j] = turn;
+                    all++;
+
+                    // up direction
+                    nx = i;
+                    ny = j;
+                    if(nx - 1 >=0 && area[nx - 1][ny] != turn && area[nx - 1][ny] != 2) {
+                        for(;;) {
+                            nx--;
+                            if(nx >= 0 && area[nx][ny] == 2) {
+                                break;
                             }
-                            break;
+                            if(area[nx][ny] == turn) {
+                                isreverse = 1;
+                                int k;
+                                for(k=i; k>nx; k--) {
+                                    area[k][ny] = turn;
+                                }
+                                break;
+                            }
                         }
                     }
-                }
 
-                // down direction
-                nx = i;
-                ny = j;
-                if(nx + 1 <= 7 && area[nx + 1][ny] != turn && area[nx + 1][ny] != 2) {
-                    for(;;) {
-                        nx++;
-                        if(nx<=7 && area[nx][ny] == 2) {
-                            break;
-                        }
-                        if(area[nx][ny] == turn) {
-                            isreverse = 1;
-                            int k;
-                            for(k=i; k<nx; k++) {
-                                area[k][ny] = turn;
+                    // down direction
+                    nx = i;
+                    ny = j;
+                    if(nx + 1 <= 7 && area[nx + 1][ny] != turn && area[nx + 1][ny] != 2) {
+                        for(;;) {
+                            nx++;
+                            if(nx<=7 && area[nx][ny] == 2) {
+                                break;
                             }
-                            break;
+                            if(area[nx][ny] == turn) {
+                                isreverse = 1;
+                                int k;
+                                for(k=i; k<nx; k++) {
+                                    area[k][ny] = turn;
+                                }
+                                break;
+                            }
                         }
                     }
-                }
 
-                // left direction
-                nx = i;
-                ny = j;
-                if(ny - 1 >= 0 && area[nx][ny - 1] != turn && area[nx][ny - 1] != 2) {
-                    for(;;) {
-                        ny--;
-                        if(ny >= 0 && area[nx][ny] == 2) {
-                            break;
-                        }
-                        if(area[nx][ny] == turn) {
-                            isreverse = 1;
-                            int k;
-                            for(k=j; k>ny; k--) {
-                                area[nx][k] = turn;
+                    // left direction
+                    nx = i;
+                    ny = j;
+                    if(ny - 1 >= 0 && area[nx][ny - 1] != turn && area[nx][ny - 1] != 2) {
+                        for(;;) {
+                            ny--;
+                            if(ny >= 0 && area[nx][ny] == 2) {
+                                break;
                             }
-                            break;
+                            if(area[nx][ny] == turn) {
+                                isreverse = 1;
+                                int k;
+                                for(k=j; k>ny; k--) {
+                                    area[nx][k] = turn;
+                                }
+                                break;
+                            }
                         }
                     }
-                }
 
-                // right direction
-                nx = i;
-                ny = j;
-                if(ny + 1 <= 7 && area[nx][ny + 1] != turn && area[nx][ny + 1] != 2) {
-                    for(;;) {
-                        ny++;
-                        if(ny <=7 && area[nx][ny] == 2) {
-                            break;
-                        }
-                        if(area[nx][ny] == turn) {
-                            isreverse = 1;
-                            int k;
-                            for(k=j; k<ny; k++) {
-                                area[nx][k] = turn;
+                    // right direction
+                    nx = i;
+                    ny = j;
+                    if(ny + 1 <= 7 && area[nx][ny + 1] != turn && area[nx][ny + 1] != 2) {
+                        for(;;) {
+                            ny++;
+                            if(ny <=7 && area[nx][ny] == 2) {
+                                break;
                             }
-                            break;
+                            if(area[nx][ny] == turn) {
+                                isreverse = 1;
+                                int k;
+                                for(k=j; k<ny; k++) {
+                                    area[nx][k] = turn;
+                                }
+                                break;
+                            }
                         }
                     }
-                }
-                if(isreverse == 1) {
-                    area[i][j] = turn;
+                    if(isreverse == 1) {
+                        area[i][j] = turn;
+                        encodefunc();
+                        // use socket to send the message
+                        extern int c_fd;
+                        send(c_fd, sendmsg1, sizeof(sendmsg1), MSG_DONTWAIT);
+                    }
                 }
             }
         }
     }
     rendermap(othello);
+
 
     // for(i=0;i<8;i++) {
     //     for(j=0;j<8;j++) {
