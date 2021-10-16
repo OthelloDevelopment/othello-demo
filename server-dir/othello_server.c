@@ -12,8 +12,8 @@ enum {
 static int area[8][8] = {{2, 2, 2, 2, 2, 2, 2, 2},
                          {2, 2, 2, 2, 2, 2, 2, 2},
                          {2, 2, 2, 2, 2, 2, 2, 2},
-                         {2, 2, 2, 2, 2, 2, 2, 2},
-                         {2, 2, 2, 2, 2, 2, 2, 2},
+                         {2, 2, 2, 1, 0, 2, 2, 2},
+                         {2, 2, 2, 0, 1, 2, 2, 2},
                          {2, 2, 2, 2, 2, 2, 2, 2},
                          {2, 2, 2, 2, 2, 2, 2, 2},
                          {2, 2, 2, 2, 2, 2, 2, 2}};
@@ -29,6 +29,9 @@ int nx, ny;
 
 // count the map, and compute who will win
 int cnt = 0, black = 0, white = 0;
+
+// record is reverse
+int isreverse;
 
 // show the status and clear the board
 static void dialog_show(Othello *othello);
@@ -153,11 +156,13 @@ static void othello_init(Othello *othello) {
     );
 
     gtk_widget_show_all(othello);
+    rendermap(othello);
 }
 
 
 // send message
 static void send_toggle(GtkWidget *widget, Othello *othello) {
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(othello->sendbutton), FALSE);
     printf("send\n");
     // encode the map
     encodefunc();
@@ -168,6 +173,7 @@ static void send_toggle(GtkWidget *widget, Othello *othello) {
 
 // receive message
 static void recv_toggle(GtkWidget *widget, Othello *othello) {
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(othello->recvbutton), FALSE);
     printf("recv\n");
     // use socket to receive the message
     extern int c_fd;
@@ -288,7 +294,9 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
     for (i = 0; i < 8; i++) {
         for (j = 0; j < 8; j++) {
             if (GTK_TOGGLE_BUTTON(othello->buttons[i][j])->active == TRUE && area[i][j] == 2) {
-                area[i][j] = turn;
+                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(othello->buttons[i][j]), FALSE);
+                isreverse = 0;
+                //area[i][j] = turn;
                 all++;
 
                 // up direction
@@ -300,7 +308,8 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
                         if(nx >= 0 && area[nx][ny] == 2) {
                             break;
                         }
-                        if(nx < 0 || area[nx][ny] == turn) {
+                        if(area[nx][ny] == turn) {
+                            isreverse = 1;
                             int k;
                             for(k=i; k>nx; k--) {
                                 area[k][ny] = turn;
@@ -319,7 +328,8 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
                         if(nx<=7 && area[nx][ny] == 2) {
                             break;
                         }
-                        if(nx > 7 || area[nx][ny] == turn) {
+                        if(area[nx][ny] == turn) {
+                            isreverse = 1;
                             int k;
                             for(k=i; k<nx; k++) {
                                 area[k][ny] = turn;
@@ -338,7 +348,8 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
                         if(ny >= 0 && area[nx][ny] == 2) {
                             break;
                         }
-                        if(ny < 0 || area[nx][ny] == turn) {
+                        if(area[nx][ny] == turn) {
+                            isreverse = 1;
                             int k;
                             for(k=j; k>ny; k--) {
                                 area[nx][k] = turn;
@@ -357,7 +368,8 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
                         if(ny <=7 && area[nx][ny] == 2) {
                             break;
                         }
-                        if(ny > 7 || area[nx][ny] == turn) {
+                        if(area[nx][ny] == turn) {
+                            isreverse = 1;
                             int k;
                             for(k=j; k<ny; k++) {
                                 area[nx][k] = turn;
@@ -365,6 +377,9 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
                             break;
                         }
                     }
+                }
+                if(isreverse == 1) {
+                    area[i][j] = turn;
                 }
             }
         }
