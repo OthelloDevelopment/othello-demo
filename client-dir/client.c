@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
     image = gtk_image_new_from_stock(GTK_STOCK_HELP, GTK_ICON_SIZE_BUTTON);
     gtk_box_pack_start(GTK_BOX(hbox), image, FALSE, FALSE, 3);
 
-    label = gtk_label_new("这是黑白棋的客户端程序");
+    label = gtk_label_new("这是黑白棋的客户端程序，您是黑棋");
     gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 3);
 
     othello = othello_new();

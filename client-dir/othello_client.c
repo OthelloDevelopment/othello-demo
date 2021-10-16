@@ -118,27 +118,27 @@ static void othello_init(Othello *othello) {
         }
     }
 
-    // add send button and set the label
-//    othello->sendbutton = gtk_toggle_button_new();
-//    gtk_button_set_label(othello->sendbutton, "send");
-//
-//    gtk_widget_modify_bg(
-//            GTK_WIDGET(othello->sendbutton),
-//            GTK_STATE_NORMAL, &col
-//    );
-//    // set the button
-//    gtk_table_attach_defaults(
-//            GTK_TABLE(table),
-//            othello->sendbutton,
-//            8, 8 + 1, 0, 0 + 1
-//    );
-//    // add the hook function
-//    g_signal_connect(
-//            G_OBJECT(othello->sendbutton),
-//            "toggled",
-//            G_CALLBACK(send_toggle),
-//            othello
-//    );
+//     add send button and set the label
+    othello->sendbutton = gtk_toggle_button_new();
+    gtk_button_set_label(othello->sendbutton, "jmp");
+
+    gtk_widget_modify_bg(
+            GTK_WIDGET(othello->sendbutton),
+            GTK_STATE_NORMAL, &col
+    );
+    // set the button
+    gtk_table_attach_defaults(
+            GTK_TABLE(table),
+            othello->sendbutton,
+            8, 8 + 1, 0, 0 + 1
+    );
+    // add the hook function
+    g_signal_connect(
+            G_OBJECT(othello->sendbutton),
+            "toggled",
+            G_CALLBACK(send_toggle),
+            othello
+    );
 
     othello->recvbutton = gtk_toggle_button_new();
     gtk_button_set_label(othello->recvbutton, "recv");
@@ -165,12 +165,15 @@ static void othello_init(Othello *othello) {
 // send message
 static void send_toggle(GtkWidget *widget, Othello *othello) {
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(othello->sendbutton), FALSE);
-    printf("send\n");
-    // encode the map
-    encodefunc();
-    // use socket to send the message
-    extern int sockfd;
-    send(sockfd,sendmsg2,sizeof(sendmsg2),MSG_DONTWAIT);
+    if(isdown == 0) {
+        printf("send\n");
+        isdown = 1;
+        // encode the map
+        encodefunc();
+        // use socket to send the message
+        extern int sockfd;
+        send(sockfd,sendmsg2,sizeof(sendmsg2),MSG_DONTWAIT);
+    }
 }
 
 // receive message
@@ -179,19 +182,26 @@ static void recv_toggle(GtkWidget *widget, Othello *othello) {
     printf("recv\n");
     // use socket to receive the message
     extern int sockfd;
-    recv(sockfd,recvmsg2,256,MSG_DONTWAIT);
+    int flag = recv(sockfd,recvmsg2,256,MSG_DONTWAIT);
     // decode the string to a two-dimensional matrix
-    decodefunc();
-    int i,j;
-    for(i=0;i<8;i++) {
-        for(j=0;j<8;j++) {
-            printf("%d ", area[i][j]);
-        }
-        printf("\n");
-    }
-    printf("%s\n",recvmsg2);
+//    decodefunc();
+//    int i,j;
+//    for(i=0;i<8;i++) {
+//        for(j=0;j<8;j++) {
+//            printf("%d ", area[i][j]);
+//        }
+//        printf("\n");
+//    }
+//    printf("%s\n",recvmsg2);
     // render the map
-    rendermap(othello);
+    printf("flag = %d\n",flag);
+    // render the map
+    if(flag>0) {
+        decodefunc();
+        rendermap(othello);
+        isdown = 0;
+    }
+//    rendermap(othello);
 }
 
 GtkWidget *othello_new(void) {
@@ -380,6 +390,8 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
                             }
                         }
                     }
+
+
                     if(isreverse == 1) {
                         area[i][j] = turn;
                         isdown = 1;
