@@ -33,6 +33,9 @@ int cnt = 0, black = 0, white = 0;
 // record is reverse
 int isreverse;
 
+// record isdown
+int isdown = 0;
+
 // show the status and clear the board
 static void dialog_show(Othello *othello);
 
@@ -292,7 +295,7 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
         for (j = 0; j < 8; j++) {
             if(GTK_TOGGLE_BUTTON(othello->buttons[i][j])->active == TRUE) {
                 gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(othello->buttons[i][j]), FALSE);
-                if (area[i][j] == 2) {
+                if (area[i][j] == 2 && isdown == 0) {
 
                     isreverse = 0;
                     //area[i][j] = turn;
@@ -379,6 +382,7 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
                     }
                     if(isreverse == 1) {
                         area[i][j] = turn;
+                        isdown = 1;
                         encodefunc();
                         // use socket to send the message
                         extern int sockfd;
