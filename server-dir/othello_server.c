@@ -1,7 +1,7 @@
 #include <gtk/gtk.h>
 #include "othello_server.h"
 
-char sendmsg[256]; // the message to send
+char sendmsg1[256]; // the message to send
 char recvmsg1[256];
 
 enum {
@@ -168,7 +168,7 @@ static void send_toggle(GtkWidget *widget, Othello *othello) {
     encodefunc();
     // use socket to send the message
     extern int c_fd;
-    send(c_fd, sendmsg, sizeof(sendmsg), 0);
+    send(c_fd, sendmsg1, sizeof(sendmsg1), MSG_DONTWAIT);
 }
 
 // receive message
@@ -177,7 +177,7 @@ static void recv_toggle(GtkWidget *widget, Othello *othello) {
     printf("recv\n");
     // use socket to receive the message
     extern int c_fd;
-    recv(c_fd,recvmsg1,256,0);
+    recv(c_fd,recvmsg1,256,MSG_DONTWAIT);
     // decode the string to a two-dimensional matrix
     decodefunc();
     int i,j;
@@ -243,13 +243,13 @@ void encodefunc() {
     for(i=0;i<8;i++) {
         for(j=0;j<8;j++) {
             switch(area[i][j]) {
-                case 0: sendmsg[i * 8 + j] = '0'; break;
-                case 1: sendmsg[i * 8 + j] = '1'; break;
-                case 2: sendmsg[i * 8 + j] = '2'; break;
+                case 0: sendmsg1[i * 8 + j] = '0'; break;
+                case 1: sendmsg1[i * 8 + j] = '1'; break;
+                case 2: sendmsg1[i * 8 + j] = '2'; break;
             }
         }
     }
-    sendmsg[64]='\0';
+    sendmsg1[64]='\0';
 }
 
 // decode func which make a string to a two-dimensional matrix

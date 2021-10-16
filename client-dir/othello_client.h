@@ -3,6 +3,7 @@
 
 #include <gdk/gdk.h>
 #include <gtk/gtkvbox.h>
+#include <sys/socket.h>	 // 包含套接字函数库
 
 #ifdef __cplusplus
 extern "C" {
