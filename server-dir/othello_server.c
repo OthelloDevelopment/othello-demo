@@ -318,6 +318,9 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
                     if(nx - 1 >=0 && area[nx - 1][ny] != turn && area[nx - 1][ny] != 2) {
                         for(;;) {
                             nx--;
+                            if(nx < 0) {
+                                break;
+                            }
                             if(nx >= 0 && area[nx][ny] == 2) {
                                 break;
                             }
@@ -338,6 +341,9 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
                     if(nx + 1 <= 7 && area[nx + 1][ny] != turn && area[nx + 1][ny] != 2) {
                         for(;;) {
                             nx++;
+                            if(nx>7) {
+                                break;
+                            }
                             if(nx<=7 && area[nx][ny] == 2) {
                                 break;
                             }
@@ -358,6 +364,9 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
                     if(ny - 1 >= 0 && area[nx][ny - 1] != turn && area[nx][ny - 1] != 2) {
                         for(;;) {
                             ny--;
+                            if(ny<0) {
+                                break;
+                            }
                             if(ny >= 0 && area[nx][ny] == 2) {
                                 break;
                             }
@@ -378,6 +387,9 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
                     if(ny + 1 <= 7 && area[nx][ny + 1] != turn && area[nx][ny + 1] != 2) {
                         for(;;) {
                             ny++;
+                            if(ny>7) {
+                                break;
+                            }
                             if(ny <=7 && area[nx][ny] == 2) {
                                 break;
                             }
@@ -391,6 +403,108 @@ static void othello_toggle(GtkWidget *widget, Othello *othello) {
                             }
                         }
                     }
+
+                    // left and up
+                    nx = i;
+                    ny = j;
+                    printf("lu\n");
+                    if(nx - 1 >=0 && ny - 1 >= 0 && area[nx - 1][ny - 1] != turn && area[nx - 1][ny - 1] != 2) {
+                        for(;;) {
+                            nx--;
+                            ny--;
+                            if(nx<0 || ny<0) {
+                                break;
+                            }
+                            if(nx >= 0 && ny >= 0 && area[nx][ny] == 2) {
+                                break;
+                            }
+                            if(area[nx][ny] == turn) {
+                                isreverse = 1;
+                                int k;
+                                for(k=1; k<i-nx; k++) {
+                                    area[i-k][j-k] = turn;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    // left and down
+                    nx = i;
+                    ny = j;
+                    printf("ld\n");
+                    if(nx + 1 <= 7 && ny - 1 >= 0 && area[nx + 1][ny - 1] != turn && area[nx + 1][ny - 1] != 2) {
+
+                        for(;;) {
+                            nx++;
+                            ny--;
+                            if(nx>7||ny<0) {
+                                break;
+                            }
+                            if(nx<=7 && ny >= 0 && area[nx][ny] == 2) {
+                                break;
+                            }
+                            if(area[nx][ny] == turn) {
+                                isreverse = 1;
+                                int k;
+                                for(k=1; k<nx-i; k++) {
+                                    area[i+k][j-k] = turn;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    // right and up
+                    nx = i;
+                    ny = j;
+                    printf("ru\n");
+                    if(nx - 1 >=0 && ny + 1 <= 7 && area[nx - 1][ny + 1] != turn && area[nx - 1][ny + 1] != 2) {
+
+                        for(;;) {
+                            nx--;
+                            ny++;
+                            if(nx<0||ny>7) {
+                                break;
+                            }
+                            if(nx >= 0 && ny <= 7 && area[nx][ny] == 2) {
+                                break;
+                            }
+                            if(area[nx][ny] == turn) {
+                                isreverse = 1;
+                                int k;
+                                for(k=1; k<i-nx; k++) {
+                                    area[i-k][j+k] = turn;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    // right and down
+                    nx = i;
+                    ny = j;
+                    printf("rd\n");
+                    if(nx + 1 <= 7 && ny + 1 <= 7 && area[nx + 1][ny + 1] != turn && area[nx + 1][ny + 1] != 2) {
+
+                        for(;;) {
+                            nx++;
+                            ny++;
+                            if(nx>7 || ny>7) {
+                                break;
+                            }
+                            if(nx <= 7 && ny <= 7 && area[nx][ny] == 2) {
+                                break;
+                            }
+                            if(area[nx][ny] == turn) {
+                                isreverse = 1;
+                                int k;
+                                for(k=1; k<nx-i; k++) {
+                                    area[i+k][j+k] = turn;
+                                }
+                                break;
+                            }
+                        }
+                    }
+
+
                     if(isreverse == 1) {
                         area[i][j] = turn;
                         isdown = 1;
